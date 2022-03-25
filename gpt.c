@@ -28,15 +28,18 @@ struct GUIDPartition {
 };
 
 void print_guid(unsigned char guid[]) {
-    for (int i = 0;i < 16;i++)
-        printf("%02X", guid[i]);
+    printf("%02X%02X%02X%02X-", guid[3], guid[2], guid[1], guid[0]);
+    printf("%02X%02X-", guid[5], guid[4]);
+    printf("%02X%02X-", guid[7], guid[6]);
+    printf("%02X%02X-", guid[8], guid[9]);
+    printf("%02X%02X%02X%02X%02X%02X", guid[10], guid[11], guid[12], guid[13], guid[14], guid[15]);
 }
 
 void print_gpt(struct GPTHeader *h) {
     printf("Signature: %s; Revision: %d\n", h->signature, h->revision);
-    printf("Raw GUID: ");
+    printf("GUID: ");
     print_guid(h->GUID);
-    printf("\nCurrent LBA: %d; Backup LBA: %d\n", h->size, h->lba_current, h->lba_backup);
+    printf("\nCurrent LBA: %d; Backup LBA: %d\n", h->lba_current, h->lba_backup);
     printf("First usable LBA: %d; Last usable LBA: %d\n", h->lba_usab_first, h->lba_usab_last);
     printf("Starting LBA of partition array: %d; Entries: %d; Entry size: %d\n", h->part_array_start, h->entry_count, h->entry_size);
 }
@@ -88,9 +91,9 @@ void print_partition(struct GUIDPartition *p) {
     printf("Partition \"%s\"\n", utf8str);
     free(utf8str);
 
-    printf("Raw GUID type: ");
+    printf("GUID type: ");
     print_guid(p->GUID_type);
-    printf("\nRaw GUID: ");
+    printf("\nGUID: ");
     print_guid(p->GUID);
     printf("\nFirst LBA: %u; Last LBA: %u\n", p->lba_first, p->lba_last);
     printf("Flags: %016X\n", p->flags);
