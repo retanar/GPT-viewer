@@ -99,8 +99,18 @@ void print_partition(struct GUIDPartition *p) {
     printf("Flags: %016X\n", p->flags);
 }
 
-int main() {
-    FILE *sda = fopen("/dev/sda", "rb");
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Program requires one argument: file path.\n");
+        return 1;
+    }
+
+    FILE *sda = fopen(argv[1], "rb");
+    if (!sda) {
+        printf("%s is not a readable file.\n", argv[1]);
+        return 1;
+    }
+
     // fseek to skip protective mbr
     fseek(sda, 512, SEEK_SET);
     fread(&gpt_header, 512, 1, sda);
